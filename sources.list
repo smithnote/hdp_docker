@@ -1,0 +1,7 @@
+deb [trusted=yes] http://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free
+deb [trusted=yes] http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-proposed-updates main contrib non-free
+deb [trusted=yes] http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free
+
+deb-src [trusted=yes] http://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free
+deb-src [trusted=yes] http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-proposed-updates main contrib non-free
+deb-src [trusted=yes] http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free
