@@ -15,7 +15,7 @@
 <configuration>
     <property>
         <name>yarn.resourcemanager.hostname</name>
-        <value>hdp_master</value>
+        <value>hdpMaster</value>
     </property>
     <property>
         <name>yarn.nodemanager.aux-services</name>
@@ -27,23 +27,23 @@
     </property>
     <property>
         <name>yarn.resourcemanager.address</name>
-        <value>hdp_master:18040</value>
+        <value>hdpMaster:18040</value>
     </property>
     <property>
         <name>yarn.resourcemanager.scheduler.address</name>
-        <value>hdp_master:18030</value>
+        <value>hdpMaster:18030</value>
     </property>
     <property>
         <name>yarn.resourcemanager.resource-tracker.address</name>
-        <value>hdp_master:18025</value>
+        <value>hdpMaster:18025</value>
     </property>
     <property>
         <name>yarn.resourcemanager.admin.address</name>
-        <value>hdp_master:18141</value>
+        <value>hdpMaster:18141</value>
     </property>
     <property>
         <name>yarn.resourcemanager.webapp.address</name>
-        <value>hdp_master:18088</value>
+        <value>hdpMaster:18088</value>
     </property>
     <property>
         <name>yarn.log-aggregation-enable</name>
@@ -56,6 +56,10 @@
     <property>
         <name>yarn.log-aggregation.retain-check-interval-seconds</name>
         <value>86400</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.localizer.address</name>
+        <value>hdpMaster:18041</value>
     </property>
     <property>
         <name>yarn.nodemanager.remote-app-log-dir</name>

@@ -1,4 +1,4 @@
-172.17.0.2	hdp_master
-172.17.0.3	hdp_slave1
-172.17.0.4	hdp_slave2
-172.17.0.5	hdp_slave3
+172.17.0.2	hdpMaster
+172.17.0.3	hdpSlave1
+172.17.0.4	hdpSlave2
+172.17.0.5	hdpSlave3

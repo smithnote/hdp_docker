@@ -19,15 +19,15 @@
 <configuration>
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value>/home/hadoop/tmp/dfs/name</value>
+        <value>/home/hadoop/hdfs/name</value>
     </property>
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value>/home/hadoop/data</value>
+        <value>/home/hadoop/hdfs/data</value>
     </property>
     <property>
         <name>dfs.replication</name>
-        <value>3</value>
+        <value>2</value>
     </property>
     <property>
         <name>dfs.webhdfs.enabled</name>
