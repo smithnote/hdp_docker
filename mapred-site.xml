@@ -23,19 +23,19 @@
     </property>
     <property>
         <name>mapred.job.tracker</name>
-        <value>hdp_master:9001</value>
+        <value>hdpMaster:9001</value>
     </property>
     <property>
         <name>mapreduce.jobtracker.http.address</name>
-        <value>hdp_master:50030</value>
+        <value>hdpMaster:50030</value>
     </property>
     <property>
         <name>mapreduce.jobhistory.address</name>
-        <value>hdp_master:10020</value>
+        <value>hdpMaster:10020</value>
     </property>
     <property>
         <name>mapreduce.jobhistory.webapp.address</name>
-        <value>hdp_master:19888</value>
+        <value>hdpMaster:19888</value>
     </property>
     <property>
         <name>mapreduce.jobhistory.done-dir</name>
@@ -48,5 +48,31 @@
     <property>
         <name>mapreduce.job.ubertask.enable</name>
         <value>true</value>
+    </property>
+
+    <property>
+        <name>yarn.app.mapreduce.am.env</name>
+        <value>HADOOP_MAPRED_HOME=/root/hadoop/</value>
+    </property>
+    <property>
+        <name>mapreduce.map.env</name>
+        <value>HADOOP_MAPRED_HOME=/root/hadoop/</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.env</name>
+        <value>HADOOP_MAPRED_HOME=/root/hadoop/</value>
+    </property>
+	<property> 
+    	<name>mapreduce.application.classpath</name>
+        <value>
+            $HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*,
+            $HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*,
+            $HADOOP_MAPRED_HOME/share/hadoop/common/*,
+            $HADOOP_MAPRED_HOME/share/hadoop/common/lib/*,
+            $HADOOP_MAPRED_HOME/share/hadoop/yarn/*,
+            $HADOOP_MAPRED_HOME/share/hadoop/yarn/lib/*,
+            $HADOOP_MAPRED_HOME/share/hadoop/hdfs/*,
+            $HADOOP_MAPRED_HOME/share/hadoop/hdfs/lib/*
+        </value>
     </property>
 </configuration>
