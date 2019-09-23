@@ -15,7 +15,7 @@
 <configuration>
     <property>
         <name>yarn.resourcemanager.hostname</name>
-        <value>hdpMaster</value>
+        <value>hdpmaster</value>
     </property>
     <property>
         <name>yarn.nodemanager.aux-services</name>
