@@ -95,6 +95,8 @@ class HdpDocker(object):
         self._master_exec(master_cmd)
         slave_cmd = "cat /smith/hdp_master_idrsa.pub >> /root/.ssh/authorized_keys"
         self._cluster_exec(slave_cmd, True)
+        cmd = 'rm -f hdp_master_idrsa.pub'
+        self._exec_command(cmd)
         for host in self.ip_to_host.values():
             cmd = 'ssh-keyscan -H %s >> ~/.ssh/known_hosts' % host
             self._master_exec(cmd)
