@@ -3,4 +3,5 @@
 练习利用docker搭建hadoop环境
 
 ### 使用
-./create.sh
+
+python3 hdp.py --help
