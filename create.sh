@@ -9,7 +9,7 @@ docker build -t hdpworker .
 docker network create --subnet=172.17.0.1/16 hdp_network
 
 docker run -itd -v ${project_pwd}:/smith --net hdp_network --ip 172.17.0.2 -h hdpMaster \
-           --name hdp_master --privileged  hdpworker
+           --name hdp_master --privileged -p 8088:8088 hdpworker
 docker run -itd -v ${project_pwd}:/smith --net hdp_network --ip 172.17.0.3 -h hdpSlave1 \
            --name hdp_slave1 --privileged  hdpworker
 docker run -itd -v ${project_pwd}:/smith --net hdp_network --ip 172.17.0.4 -h hdpSlave2 \

@@ -22,22 +22,6 @@
         <value>yarn</value>
     </property>
     <property>
-        <name>mapred.job.tracker</name>
-        <value>hdpMaster:9001</value>
-    </property>
-    <property>
-        <name>mapreduce.jobtracker.http.address</name>
-        <value>hdpMaster:50030</value>
-    </property>
-    <property>
-        <name>mapreduce.jobhistory.address</name>
-        <value>hdpMaster:10020</value>
-    </property>
-    <property>
-        <name>mapreduce.jobhistory.webapp.address</name>
-        <value>hdpMaster:19888</value>
-    </property>
-    <property>
         <name>mapreduce.jobhistory.done-dir</name>
         <value>/jobhistory/done</value>
     </property>
