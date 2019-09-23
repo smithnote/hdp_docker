@@ -103,6 +103,7 @@ class HdpDocker(object):
         return True
 
     def create_cluster(self):
+        self._create_docker_images()
         docker_cmd = 'docker network create --subnet %s %s'\
                      % (self.subnet, self.hdp_network)
         self._exec_command(docker_cmd)
