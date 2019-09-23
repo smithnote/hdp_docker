@@ -23,7 +23,7 @@
     </property>
     <property>
         <name>fs.default.name</name>
-        <value>hdfs://hdpMaster:9000</value>
+        <value>hdfs://hdpmaster:9000</value>
     </property>
     <property>
         <name>fs.trash.interval</name>
