@@ -4,7 +4,7 @@
 
 ### 环境
 
-1. hadoop: hadoop-3.2.0
+1. hadoop: hadoop-3.2.1
 2. java:   openjdk11
 3. python: python3 
 

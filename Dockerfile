@@ -4,8 +4,8 @@ WORKDIR /root
 COPY sources.list /etc/apt/sources.list
 COPY env env
 COPY activation-1.1.1.jar activation-1.1.1.jar
-RUN hdp_version="3.2.0" \
-    && hdp_url="http://archive.apache.org/dist/hadoop/common/hadoop-${hdp_version}/hadoop-${hdp_version}.tar.gz" \
+RUN hdp_version="3.2.1" \
+    && hdp_url="http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-${hdp_version}/hadoop-${hdp_version}.tar.gz" \
     && apt-get update \
     && apt-get install openssh-server net-tools vim -y --no-install-recommends \
     && apt-get install openjdk-11-jdk axel rsync gawk -y --no-install-recommends \

@@ -131,9 +131,7 @@ class HdpDocker(object):
 
     def start_cluster(self, init_start=False):
         if init_start:
-            cmd = 'source /root/.bashrc \
-                   && hdfs namenode -format \
-                   && start-all.sh && sleep 5 && jps'
+            cmd = 'source /root/.bashrc && hdfs namenode -format && start-all.sh'
             self._master_exec(cmd)
             return True
         with open('hosts', 'r') as reader:
@@ -141,7 +139,7 @@ class HdpDocker(object):
                 contain_name = line.strip().split('\t')[1].strip()
                 cmd = 'docker start %s' % contain_name
                 self._exec_command(cmd)
-                logging.info('contains %s start ...', contain_name)
+                logging.info('contain %s start ...', contain_name)
             logging.info('contains sshd service start...')
             cmd = 'service ssh start'
             self._cluster_exec(cmd, True)
