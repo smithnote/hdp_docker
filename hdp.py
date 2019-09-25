@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #coding=utf-8
 
-# Copyright (c) 2019 smtihemail@163.com. All rights reserved.
+# Copyright (c) 2019 smithemail@163.com. All rights reserved.
 # Author：smithemail@163.com
 # Time  ：2019-09-23
 
@@ -48,23 +48,23 @@ class HdpDocker(object):
 
     def _master_exec(self, command):
         docker_cmd = 'docker exec %s bash -c "%s"' % (self.master_host, command)
-        self._exec_command(docker_cmd)
-        return True
+        return self._exec_command(docker_cmd)
 
     def _exec_command(self, command):
         try:
+            command = command.strip()
             p = subprocess.Popen(command, shell=True, encoding='utf8',
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = p.communicate()
             if out.strip():
-                print(out.strip())
+                logging.debug(out.strip())
             if err.strip():
-                print(err.strip())
+                logging.debug(err.strip())
         except Exception as e:
             logging.error('execute conmand fail: %s', command)
             traceback.print_exc()
             sys.exit(1)
-        logging.info('execute conmand success: %s', command)
+        logging.debug('exec cmd success, %s', command)
         return out
 
     def _create_docker_images(self):
@@ -103,10 +103,13 @@ class HdpDocker(object):
         return True
 
     def create_cluster(self):
+        logging.info('create docker images: %s ...', self.hdpdocker_images)
         self._create_docker_images()
+        logging.info('create docker network: %s ...', self.subnet)
         docker_cmd = 'docker network create --subnet %s %s'\
                      % (self.subnet, self.hdp_network)
         self._exec_command(docker_cmd)
+        logging.info('create cluster master: %s ...', self.master_host)
         cwd = os.getcwd()
         docker_cmd = 'docker run -itd -v %s:/smith --net %s --ip %s -h %s\
                                  --name %s --privileged %s'
@@ -117,12 +120,14 @@ class HdpDocker(object):
         for ip, host in self.ip_to_host.items():
             if ip == self.master_ip:
                 continue
+            logging.info('create cluster slave: %s ...', host)
             slave_cmd = docker_cmd % (cwd, self.hdp_network, ip, host,
                                       host, self.hdpdocker_images)
             self._exec_command(slave_cmd)
+        logging.info('configure cluster ...')
         self._configure_cluster()
+        logging.info('start cluster ...')
         self.start_cluster(True)
-        pass
 
     def start_cluster(self, init_start=False):
         if init_start:
@@ -133,23 +138,28 @@ class HdpDocker(object):
             return True
         with open('hosts', 'r') as reader:
             for line in reader:
-                contain_name = line.split('\t')[1]
+                contain_name = line.strip().split('\t')[1].strip()
                 cmd = 'docker start %s' % contain_name
                 self._exec_command(cmd)
+                logging.info('contains %s start ...', contain_name)
+            logging.info('contains sshd service start...')
             cmd = 'service ssh start'
             self._cluster_exec(cmd, True)
+            logging.info('hadoop service start...')
             cmd = 'source /root/.bashrc && start-all.sh'
             self._master_exec(cmd)
 
     def status_cluster(self):
         cmd = 'source /root/.bashrc && hdfs dfsadmin -report'
-        self._master_exec(cmd)
+        out = self._master_exec(cmd)
+        logging.info(out)
         return True
 
     def stop_cluster(self):
         with open('hosts', 'r') as reader:
             for line in reader:
-                contain_name = line.split('\t')[1]
+                contain_name = line.strip().split('\t')[1].strip()
+                logging.info('stop contain %s ...', contain_name)
                 cmd = 'docker stop %s' % (contain_name)
                 self._exec_command(cmd)
 
@@ -159,10 +169,20 @@ class HdpDocker(object):
                   % (self.master_host)
             json_string = self._exec_command(cmd)
             for line in reader:
-                contain_name = line.split('\t')[1]
+                contain_name = line.split('\t')[1].strip()
+                logging.info('removing contain %s ...', contain_name)
                 cmd = 'docker rm -f %s' % (contain_name)
                 self._exec_command(cmd)
-            for network in json.loads(json_string).keys():
+            try:
+                networks = json.loads(json_string).keys()
+            except json.JSONDecodeError as je:
+                logging.warning('parse network string error, json:%s', json_string.strip())
+                return False
+            except Exception as e:
+                logging.warn('find network error: %s', str(e))
+                return False
+            for network in networks:
+                logging.info('removing network %s ...', network)
                 cmd = 'docker network rm %s' % network
                 self._exec_command(cmd)
         return True;
@@ -176,20 +196,21 @@ class HdpDocker(object):
             'clean' : self.clean_cluster
         }
         if command not in process:
-            logging.error('not find relate operationg of %s' % command)
+            logging.error('not find relate operation of %s' % command)
             return False
         return process[command]()
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level='DEBUG')
+    log_format = '[%(levelname)s %(asctime)s] %(message)s'
+    logging.basicConfig(level='INFO', format=log_format)
     parser = OptionParser()
-    parser.add_option('--subnet', type='string', dest='subnet',
-            default='172.17.0.1/16', help='用于部署的子网')
-    parser.add_option('--size', type='int', dest='cluster_size', default=4,
-            help='集群数量')
     parser.add_option('-c', '--cmd', type='string', dest='command', default='status',
-            help='操作命令: create, start, status, stop, clean')
+            help='操作命令: create, start, status, stop, clean, 默认:%default')
+    parser.add_option('--subnet', type='string', dest='subnet',
+            default='172.17.0.1/16', help='用于部署的子网, 默认:%default')
+    parser.add_option('--size', type='int', dest='cluster_size', default=4,
+            help='集群数量, 默认:%default')
     option, args = parser.parse_args()
     hdp_docker = HdpDocker(option.subnet, option.cluster_size)
     hdp_docker.run(option.command)
