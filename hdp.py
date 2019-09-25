@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #coding=utf-8
 
-# Copyright (c) 2019 smtihemail@163.com. All rights reserved.
+# Copyright (c) 2019 smithemail@163.com. All rights reserved.
 # Author：smithemail@163.com
 # Time  ：2019-09-23
 
@@ -173,7 +173,15 @@ class HdpDocker(object):
                 logging.info('removing contain %s ...', contain_name)
                 cmd = 'docker rm -f %s' % (contain_name)
                 self._exec_command(cmd)
-            for network in json.loads(json_string).keys():
+            try:
+                networks = json.loads(json_string).keys()
+            except json.JSONDecodeError as je:
+                logging.warning('parse network string error, json:%s', json_string.strip())
+                return False
+            except Exception as e:
+                logging.warn('find network error: %s', str(e))
+                return False
+            for network in networks:
                 logging.info('removing network %s ...', network)
                 cmd = 'docker network rm %s' % network
                 self._exec_command(cmd)
