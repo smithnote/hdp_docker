@@ -18,7 +18,7 @@ from optparse import OptionParser
 class HdpDocker(object):
     def __init__(self, subnet, cluster_size):
         self.subnet = subnet
-        self.cluster_size = cluster_size
+        self.cluster_size = cluster_size if cluster_size > 0 else 1
         self.ip_to_host = {}
         self.master_ip = ''
         self.master_host = 'hdpmaster'
@@ -27,9 +27,28 @@ class HdpDocker(object):
         self._initilization()
 
     def _initilization(self):
-        ips = [str(ip) for ip in ipaddress.IPv4Network(self.subnet, strict=False)]
+        try:
+            sub_network = ipaddress.IPv4Network(self.subnet, strict=False)
+            if not sub_network.is_private:
+                logging.error('provide subnet %s is not private', self.subnet)
+                sys.exit(-1)
+            cmd = 'docker inspect bridge'
+            out = self._exec_command(cmd)
+            default_subnet = json.loads(out)[0]['IPAM']['Config'][0]['Subnet']
+            default_subnet = ipaddress.IPv4Network(default_subnet, strict=False)
+            if sub_network.overlaps(default_subnet):
+                logging.error('provide subnet %s overlaps with default subnet %s',
+                              self.subnet, str(default_subnet))
+                sys.exit(-1)
+        except json.JSONDecodeError as je:
+            logging.error('parser default subnet error, %s', str(je))
+            traceback.print_exc()
+            sys.exit(-1)
+        subnet_iter = iter(sub_network)
+        next(subnet_iter), next(subnet_iter)
         idx = 1
-        for ip, _ in zip(ips[2:], range(self.cluster_size)):
+        for ip, _ in zip(subnet_iter, range(self.cluster_size)):
+            ip = str(ip)
             if not self.master_ip:
                 self.master_ip = ip
                 self.ip_to_host[self.master_ip] = self.master_host
